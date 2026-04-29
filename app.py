@@ -11,12 +11,12 @@ import csv
 import io
 import time
 import streamlit as st
-from dotenv import load_dotenv
 
 # ──────────────────────────────────────────────
-# 1. 환경변수 로드
+# 1. 환경변수 확인
 # ──────────────────────────────────────────────
-load_dotenv()  # .env 파일에서 환경변수 읽기
+# Codespaces Secrets에서 자동 주입된 GEMINI_API_KEY를 사용합니다.
+# 로컬 실행 시에는 사이드바에서 직접 입력할 수도 있습니다.
 
 # ──────────────────────────────────────────────
 # 2. 페이지 기본 설정
@@ -46,7 +46,7 @@ def init_gemini():
             help="AI Studio(https://aistudio.google.com/)에서 발급받은 API key를 입력하세요.",
         )
 
-    if not api_key or api_key == "여기에_API_키를_입력하세요":
+    if not api_key:
         return None
 
     try:
@@ -206,8 +206,10 @@ model = init_gemini()
 
 if model is None:
     st.info(
-        "👈 사이드바에 Gemini API Key를 입력하거나, "
-        "`.env` 파일에 `GEMINI_API_KEY`를 설정해 주세요.\n\n"
+        "🔑 Gemini API Key가 설정되지 않았습니다.\n\n"
+        "**Codespaces 사용 시:** GitHub Settings → Codespaces → Secrets에서 "
+        "`GEMINI_API_KEY`를 등록하세요.\n\n"
+        "**로컬 사용 시:** 왼쪽 사이드바에서 API Key를 직접 입력하세요.\n\n"
         "API Key 발급: [AI Studio](https://aistudio.google.com/) → Get API Key"
     )
 
@@ -222,7 +224,7 @@ with st.form("search_form"):
 # 검색 실행
 if submitted and keyword:
     if model is None:
-        st.error("❌ Gemini API Key가 설정되지 않았습니다. 사이드바에서 API Key를 입력해 주세요.")
+        st.error("❌ Gemini API Key가 설정되지 않았습니다. Codespaces Secrets를 확인하거나 사이드바에서 입력해 주세요.")
     else:
         # ── 뉴스 검색 ──
         with st.spinner(f"'{keyword}' 관련 뉴스를 검색 중..."):
@@ -295,7 +297,7 @@ with st.sidebar:
     st.markdown("### ℹ️ 사용 방법")
     st.markdown(
         """
-1. Gemini API Key를 입력하세요
+1. Codespaces Secrets 또는 사이드바에서 API Key 설정
 2. 검색 키워드를 입력하고 **검색하기** 클릭
 3. AI가 각 기사를 요약합니다
 4. **CSV 다운로드** 버튼으로 결과 저장
