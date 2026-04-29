@@ -54,7 +54,7 @@ def init_gemini():
 
         genai.configure(api_key=api_key)
         # gemini-2.0-flash 모델 사용 (빠르고 저렴)
-        model = genai.GenerativeModel("gemini-2.0-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
         return model
     except Exception as e:
         st.error(f"❌ Gemini API 초기화 실패: {e}")
